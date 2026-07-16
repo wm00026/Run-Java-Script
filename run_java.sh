@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
-
 # Author: wm00026
+# License: MIT
 
-# Compiles a java file with (javac)
-# Reads compile errors/warnings
-# Runs the file
 
 # With no given arguments
 if [[ $# ==  0 ]]; then
@@ -23,16 +20,10 @@ if [[ ! -f "$JAVA_FILE" ]] || [[ "$JAVA_FILE" != *.java ]]; then
 fi
 
 # Checks that javac and java are available
-if ! command -v javac >/dev/null; then
-    echo "Error: javac not found on PATH"
+if ! command -v javac >/dev/null || ! command -v java >/dev/null; then
+    echo "Error: necessary java programs are not found on PATH"
     exit 1
 fi
-
-if ! command -v java >/dev/null; then
-    echo "Error: java not found on PATH"
-    exit 1
-fi
-
 
 # Compile w/ extended warnings enabled
 echo "=== Compiling $JAVA_FILE ==="
