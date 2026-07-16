@@ -4,14 +4,12 @@
 
 
 # With no given arguments
-if [[ $# ==  0 ]]; then
+if [[ $# -eq  0 ]]; then
     echo "Usage: $0 <JavaFile.java>"
     exit 1
 fi
 
 JAVA_FILE=$1
-CLASS_NAME=$(basename "$JAVA_FILE" .java)
-CLASS_DIR=$(dirname "$JAVA_FILE")
 
 # Checks if the file exits and has proper extension
 if [[ ! -f "$JAVA_FILE" ]] || [[ "$JAVA_FILE" != *.java ]]; then
@@ -25,16 +23,16 @@ if ! command -v javac >/dev/null || ! command -v java >/dev/null; then
     exit 1
 fi
 
+CLASS_NAME=$(basename -- "$JAVA_FILE" .java)
+CLASS_DIR=$(dirname -- "$JAVA_FILE")
+
 # Compile w/ extended warnings enabled
 echo "=== Compiling $JAVA_FILE ==="
-javac -Xdiags:verbose "$JAVA_FILE"
-COMPILE_STATUS=$?
-
-# Check compile status
-if [ $COMPILE_STATUS != 0 ]; then
-    echo "=== Compilation failed: Fix errors and try again ==="
-    exit $COMPILE_STATUS
+if ! javac -Xdiags:verbose "$JAVA_FILE"; then
+    echo "=== Compilation Failed: Fix errors and try again ==="
+    exit 1
 fi
+
 
 # Runs the program
 echo
