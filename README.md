@@ -10,11 +10,10 @@ The bash script checks if it actually is a Java file, then compiles with javac a
 cp run_java.sh <directory>/
 
 # Then, run the file.
-./run_java <file_name>.java
+./run_java.sh <file_name>.java
 
 ```
 
 ## Limitations
-The program has limitations when it comes to more complicated Java files, or packages like Maven or Gradle. This is a basic script meant for basic Java files.
-
-Future improvements would be made to accommodate more complex Java files.
+The check on java and javac versions is done with the assumption that the JDK on javac and java is the same.
+The check for packages is assuming the directory layout matches the package.

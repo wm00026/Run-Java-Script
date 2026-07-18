@@ -11,20 +11,28 @@ fi
 
 JAVA_FILE=$1
 
-# Checks if the file exits and has proper extension
+# Checks if the file exits and has proper extension and exists.
 if [[ ! -f "$JAVA_FILE" ]] || [[ "$JAVA_FILE" != *.java ]]; then
-    echo "Error: "$JAVA_FILE" has an improper format or doesn't exist "
+    echo "Error: $JAVA_FILE has an improper format or doesn't exist "
     exit 1
 fi
 
 # Checks that javac and java are available
+# This assumes the java and javac JDK is the same.
 if ! command -v javac >/dev/null || ! command -v java >/dev/null; then
     echo "Error: necessary java programs are not found on PATH"
     exit 1
 fi
 
+# class name and directory
 CLASS_NAME=$(basename -- "$JAVA_FILE" .java)
 CLASS_DIR=$(dirname -- "$JAVA_FILE")
+
+# package, if applicable:
+PACKAGE=$(grep -oP '^\s*package\s+\K[\w.]+(?=\s*;)' "$JAVA_FILE")
+if [[ -n "$PACKAGE" ]]; then
+    CLASS_NAME="${PACKAGE}.${CLASS_NAME}"
+fi
 
 # Compile w/ extended warnings enabled
 echo "=== Compiling $JAVA_FILE ==="
